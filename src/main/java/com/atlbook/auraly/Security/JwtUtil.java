@@ -5,12 +5,10 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.Map;
 
 @Component
 public class JwtUtil {
@@ -21,9 +19,8 @@ public class JwtUtil {
     public String generatedToken (UserEntity user){
         return Jwts.builder()
                 .signWith( secretKey())
-                .setSubject(user.getUsername())
-                .setClaims(Map.of("role",user.getRole(),
-                        "email",user.getEmail()))
+                .setSubject(user.getEmail())
+                .claim("role", user.getRole())
                 .setExpiration(
                         new Date(System.currentTimeMillis()+EXPIRED_DATE)
                 )
@@ -33,6 +30,8 @@ public class JwtUtil {
     public Claims decodeToken(String token){
         return Jwts.parserBuilder().setSigningKey(secretKey()).build().parseClaimsJws(token).getBody();
     }
+
+
     public String getUsername(String token){
         try{
             return decodeToken(token).getSubject();
@@ -40,6 +39,11 @@ public class JwtUtil {
             throw new RuntimeException("Token expired olub");
         }
     }
+
+    public boolean isValid(String token){
+        return decodeToken(token).getExpiration().after(new Date());
+    }
+
     private Key secretKey(){
         return Keys.hmacShaKeyFor(SECRET_KEY);
     }

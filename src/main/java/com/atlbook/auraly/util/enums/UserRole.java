@@ -1,4 +1,4 @@
-package com.atlbook.auraly.enums;
+package com.atlbook.auraly.util.enums;
 
 public enum UserRole {
     ROLE_ADMIN,

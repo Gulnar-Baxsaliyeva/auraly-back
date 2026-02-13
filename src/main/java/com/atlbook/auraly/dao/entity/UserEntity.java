@@ -1,8 +1,7 @@
 package com.atlbook.auraly.dao.entity;
 
-import com.atlbook.auraly.enums.Gender;
-import com.atlbook.auraly.enums.UserRole;
-import com.atlbook.auraly.enums.ZodiacSign;
+import com.atlbook.auraly.util.enums.Gender;
+import com.atlbook.auraly.util.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -12,13 +11,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Entity
-@Table (name="auraly_users")
+@Table (name="auraly_userrr")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserEntity {
     @Id
@@ -36,7 +36,9 @@ public class UserEntity {
     String email;
     @Column(name="phone", nullable = false)
     String phone;
+    @Column(name="birthDate")
     LocalDate birthDate;
+    @Column(name="birthTime")
     LocalTime birthTime;
     @Column(name="created_at", nullable = false)
     @CreationTimestamp
@@ -44,11 +46,19 @@ public class UserEntity {
     @Column(name="updated_at", nullable = false)
     @UpdateTimestamp
     LocalDateTime updatedAt;
+    Double latitude;
+    Double longitude;
+
+
+    @OneToMany(mappedBy = "userEntity",cascade = CascadeType.ALL,orphanRemoval = true)
+    List<PlanetEntity> planetEntities;
+
+
     @Enumerated(EnumType.STRING)
-    ZodiacSign zodiacSign;
     UserRole role;
     @Enumerated(EnumType.STRING)
-    Gender Other;
+    Gender gender;
+
 
 
 }
