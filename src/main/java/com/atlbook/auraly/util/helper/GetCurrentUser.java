@@ -24,7 +24,7 @@ public class GetCurrentUser {
 
     String username = auth.getName();
       System.out.println(username);
-    return userRepository.findByUsername(username).orElseThrow(
+    return userRepository.findByEmail(username).orElseThrow(
             () -> new UsernameNotFoundException("User Not Found")
     );
 

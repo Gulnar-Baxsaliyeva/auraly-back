@@ -16,14 +16,13 @@ public class JwtUtil {
     private byte[] SECRET_KEY;
     @Value("${jwt.expired_date}")
     private Long EXPIRED_DATE;
+
     public String generatedToken (UserEntity user){
         return Jwts.builder()
-                .signWith( secretKey())
-                .setSubject(user.getEmail())
+                .signWith(secretKey())
+                .setSubject(String.valueOf(user.getId()))
                 .claim("role", user.getRole())
-                .setExpiration(
-                        new Date(System.currentTimeMillis()+EXPIRED_DATE)
-                )
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRED_DATE))
                 .compact();
     }
 
@@ -31,12 +30,11 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(secretKey()).build().parseClaimsJws(token).getBody();
     }
 
-
-    public String getUsername(String token){
+    public String getUserIdFromToken(String token){
         try{
             return decodeToken(token).getSubject();
-        }catch(Exception e ){
-            throw new RuntimeException("Token expired olub");
+        } catch(Exception e ){
+            throw new RuntimeException("Token expired");
         }
     }
 
@@ -48,4 +46,3 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(SECRET_KEY);
     }
 }
-

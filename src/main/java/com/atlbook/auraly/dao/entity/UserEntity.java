@@ -2,6 +2,7 @@ package com.atlbook.auraly.dao.entity;
 
 import com.atlbook.auraly.util.enums.Gender;
 import com.atlbook.auraly.util.enums.UserRole;
+import com.atlbook.auraly.util.enums.WorkStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -18,7 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Entity
-@Table (name="auraly_userrr")
+@Table (name="auraly_user2")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserEntity {
     @Id
@@ -26,15 +27,15 @@ public class UserEntity {
     Long id;
     @Column(name="firstname", nullable = false)
     String firstName;
-    @Column(name="lastname", nullable = false)
+    @Column(name="lastname", nullable = true)
     String lastName;
-    @Column(name="username", nullable = false, unique = true)
+    @Column(name="username", nullable = true)
     String username;
     @Column(name="password", nullable = false)
     String password;
-    @Column(name="email", nullable = false,unique = true)
+    @Column(name="email",unique = true)
     String email;
-    @Column(name="phone", nullable = false)
+    @Column(name="phone", nullable = true)
     String phone;
     @Column(name="birthDate")
     LocalDate birthDate;
@@ -48,16 +49,18 @@ public class UserEntity {
     LocalDateTime updatedAt;
     Double latitude;
     Double longitude;
+    String location;
 
 
     @OneToMany(mappedBy = "userEntity",cascade = CascadeType.ALL,orphanRemoval = true)
     List<PlanetEntity> planetEntities;
 
-
     @Enumerated(EnumType.STRING)
     UserRole role;
     @Enumerated(EnumType.STRING)
     Gender gender;
+    @Enumerated(EnumType.STRING)
+    WorkStatus workStatus;
 
 
 

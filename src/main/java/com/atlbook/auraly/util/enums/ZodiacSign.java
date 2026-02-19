@@ -13,7 +13,4 @@ public enum ZodiacSign {
     OĞLAQ,
     DOLÇA,
     BALIQ;
-
-
-
 }

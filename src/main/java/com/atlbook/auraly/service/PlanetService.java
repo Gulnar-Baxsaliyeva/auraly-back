@@ -21,7 +21,7 @@ public class PlanetService {
     private final ZodiacRepository zodiacRepository;
 
     private final AstrologyClient astrologyClient;
-    // TODO: bu method sadece istifadeciden token alib geri melumat gostermelidir;
+
     public List<PlanetResponse> getPlanets(){
         var user = getCurrentUser.getCurrentUser();
         var planets = user.getPlanetEntities().stream().map(this::entityToDto).toList();
@@ -33,10 +33,6 @@ public class PlanetService {
                 }
             }
         }
-
-
-
-
         return planets;
     }
 
