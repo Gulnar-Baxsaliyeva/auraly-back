@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -59,7 +60,7 @@ public class AuthService implements UserDetailsService {
     }
 
     private UserDetails buildUserDetails(UserEntity user) {
-        return org.springframework.security.core.userdetails.User
+        return User
                 .withUsername(user.getEmail())
                 .password(user.getPassword())
                 .authorities(new ArrayList<>())
@@ -122,15 +123,47 @@ public class AuthService implements UserDetailsService {
                 .lon(user.getLongitude())
                 .tzone(4)
                 .build();
-
-
         var data = astrologyClient.getPlanets(birthDto);
-
+        for(var d  : data){
+            String planetName = planetNameTranslete(d);
+            d.setName(planetName);
+            String signZodiacTranslate = zodiacTranslete(d);
+            d.setSign(signZodiacTranslate.isEmpty() ? d.getSign() : signZodiacTranslate);
+        }
         var planets = dtoToEntityList(data, users);
-
-
+        planetRepository.deleteByUserEntity(users);
         planetRepository.saveAll(planets);
+    }
 
+    private String planetNameTranslete(PlanetResponse d) {
+        String planetNameTranslete;
+        switch (d.getName()){
+            case "Sun" -> planetNameTranslete = "Günəş";
+            case "Moon" -> planetNameTranslete = "Ay";
+            case "Ascendant" -> planetNameTranslete = "Yüksələn";
+            default -> planetNameTranslete = "";
+        }
+        return planetNameTranslete;
+    }
+
+    private static String zodiacTranslete(PlanetResponse d) {
+        String signZodiacTranslate;
+        switch (d.getSign()){
+            case "Cancer" -> signZodiacTranslate = "Xərçəng";
+            case "Aries" -> signZodiacTranslate = "Qoç";
+            case "Taurus" -> signZodiacTranslate = "Buğa";
+            case "Gemini" -> signZodiacTranslate = "Əkizlər";
+            case "Leo" -> signZodiacTranslate = "Şir";
+            case "Virgo" -> signZodiacTranslate = "Qız";
+            case "Libra" -> signZodiacTranslate = "Tərəzi";
+            case "Scorpio" -> signZodiacTranslate = "Əqrəb";
+            case "Sagittarius" -> signZodiacTranslate = "Oxatan";
+            case "Capricorn" -> signZodiacTranslate = "Oğlaq";
+            case "Aquarius" -> signZodiacTranslate = "Dolça";
+            case "Pisces" -> signZodiacTranslate = "Balıq";
+            default -> signZodiacTranslate = "";
+        }
+        return signZodiacTranslate;
     }
 
 
@@ -144,10 +177,9 @@ public class AuthService implements UserDetailsService {
 
     private List<PlanetEntity> dtoToEntityList(List<PlanetResponse> dtos, UserEntity e) {
         List<PlanetEntity> entities = new ArrayList<>();
-        List<String> whiteList = List.of("Sun", "Moon", "Ascendant");
-        List<Long> whiteIdList = List.of(0L, 1L, 9L);
+        List<String> whiteList = List.of("Günəş", "Ay", "Yüksələn");
         for (PlanetResponse r : dtos) {
-            if (!whiteIdList.contains(r.getId()) || !whiteList.contains(r.getName())) continue;
+            if (!whiteList.contains(r.getName())) continue;
             entities.add(dtoToEntity(r, e));
         }
         return entities;
