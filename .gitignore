@@ -35,3 +35,16 @@ out/
 
 ### VS Code ###
 .vscode/
+
+
+# Spring Boot config
+application.properties
+application.yml
+
+# Gradle
+build.gradle
+build.gradle.kts
+gradle-wrapper.jar
+
+# Build output
+/build/

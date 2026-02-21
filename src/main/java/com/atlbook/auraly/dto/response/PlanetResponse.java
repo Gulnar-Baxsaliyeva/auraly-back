@@ -14,5 +14,6 @@ public class PlanetResponse {
     Long id;
     String name;
     String sign;
+    Double fullDegree;
     String description;
 }

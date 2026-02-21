@@ -127,14 +127,15 @@ public class AuthService implements UserDetailsService {
         for(var d  : data){
             String planetName = planetNameTranslete(d);
             d.setName(planetName);
-            String signZodiacTranslate = zodiacTranslete(d);
-            d.setSign(signZodiacTranslate.isEmpty() ? d.getSign() : signZodiacTranslate);
+
+            String westernSign = convertFullDegreeToWesternSign(d.getFullDegree());
+            String signTranslated = zodiacTransleteSign(westernSign);
+            d.setSign(signTranslated.isEmpty() ? d.getSign() : signTranslated);
         }
         var planets = dtoToEntityList(data, users);
         planetRepository.deleteByUserEntity(users);
         planetRepository.saveAll(planets);
     }
-
     private String planetNameTranslete(PlanetResponse d) {
         String planetNameTranslete;
         switch (d.getName()){
@@ -146,9 +147,9 @@ public class AuthService implements UserDetailsService {
         return planetNameTranslete;
     }
 
-    private static String zodiacTranslete(PlanetResponse d) {
+    private static String zodiacTransleteSign(String d) {
         String signZodiacTranslate;
-        switch (d.getSign()){
+        switch (d){
             case "Cancer" -> signZodiacTranslate = "Xərçəng";
             case "Aries" -> signZodiacTranslate = "Qoç";
             case "Taurus" -> signZodiacTranslate = "Buğa";
@@ -164,6 +165,16 @@ public class AuthService implements UserDetailsService {
             default -> signZodiacTranslate = "";
         }
         return signZodiacTranslate;
+    }
+
+    private static String convertFullDegreeToWesternSign(Double fullDegree) {
+        double ayanamsa = 23.44;
+        double westernDegree = (fullDegree + ayanamsa) % 360;
+
+        String[] signs = {"Aries","Taurus","Gemini","Cancer","Leo","Virgo",
+                "Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"};
+        int index = (int) (westernDegree / 30);
+        return signs[index];
     }
 
 
