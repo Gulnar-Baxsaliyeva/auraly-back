@@ -14,6 +14,7 @@ public class PlanetResponse {
     Long id;
     String name;
     String sign;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     Double fullDegree;
     String description;
 }
