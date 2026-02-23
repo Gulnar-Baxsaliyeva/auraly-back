@@ -39,12 +39,16 @@ public class SecurityConfig {
                 .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
 
-                    auth.requestMatchers("/api/v1/auraly/signup").permitAll();
-                    auth.requestMatchers("/api/v1/auraly/login").permitAll();
-                    auth.requestMatchers("/api/v1/info/**").permitAll();
-                    auth.requestMatchers("/v3/api-docs/**",
+                   auth.requestMatchers(
+                            "/api/v1/auraly/signup",
+                            "/api/v1/auraly/login",
+                            "/api/v1/info/**",
+                            "/v3/api-docs/**",
                             "/swagger-ui/**",
-                            "/swagger-ui.html").permitAll();
+                            "/swagger-ui.html",
+                            "/swagger-resources/**",
+                            "/webjars/**"
+                    ).permitAll();
                     auth.anyRequest().authenticated();
                 })
 
