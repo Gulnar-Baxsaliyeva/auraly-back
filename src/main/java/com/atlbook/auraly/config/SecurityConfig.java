@@ -42,6 +42,9 @@ public class SecurityConfig {
                     auth.requestMatchers("/api/v1/auraly/signup").permitAll();
                     auth.requestMatchers("/api/v1/auraly/login").permitAll();
                     auth.requestMatchers("/api/v1/info/**").permitAll();
+                    auth.requestMatchers("/v3/api-docs/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html").permitAll();
 
 
                     auth.anyRequest().authenticated();
@@ -52,7 +55,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
