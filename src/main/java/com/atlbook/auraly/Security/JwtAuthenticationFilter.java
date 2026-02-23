@@ -27,26 +27,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Lazy
     private AuthService authService;
 
-    @Override
-    protected boolean shouldNotFilter(HttpServletRequest request) {
-        String path = request.getRequestURI();
-        System.out.println("Path: " + path);
-        return path.startsWith("/swagger-ui")
-                || path.startsWith("/v3/api-docs")
-                || path.startsWith("/swagger-resources")
-                || path.startsWith("/webjars")
-                || path.contains("/api/v1/auraly/signup")
-                || path.contains("/api/v1/auraly/login");
-    }
+//    @Override
+//    protected boolean shouldNotFilter(HttpServletRequest request) {
+//        String path = request.getRequestURI();
+//        System.out.println("Path: " + path);
+//        return path.startsWith("/swagger-ui")
+//                || path.startsWith("/v3/api-docs")
+//                || path.startsWith("/swagger-resources")
+//                || path.startsWith("/webjars")
+//                || path.contains("/api/v1/auraly/signup")
+//                || path.contains("/api/v1/auraly/login");
+//    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
-
-        if (shouldNotFilter(request)) {
-            filterChain.doFilter(request, response);
-            return;
-        }
+        String path = request.getServletPath();
+        System.out.println("Path: " + path);
+//        if (shouldNotFilter(request)) {
+//            filterChain.doFilter(request, response);
+//            return;
+//        }
 
         String authHeader = request.getHeader("Authorization");
 
